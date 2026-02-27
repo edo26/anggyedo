@@ -11,6 +11,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import HeroSection from '@/components/sections/HeroSection';
 import ExperienceSection from '@/components/sections/ExperienceSection';
+import ProjectsSection from '@/components/sections/ProjectsSection';
 import SkillsSection from '@/components/sections/SkillsSection';
 import CTASection from '@/components/sections/CTASection';
 import { useContent } from '@/lib/contentProvider';
@@ -48,6 +49,7 @@ export default function HomePage() {
         id="education"
         variant="education"
       />
+      <ProjectsSection />
       <SkillsSection />
       <CTASection />
       <Footer />

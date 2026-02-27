@@ -21,13 +21,13 @@ import {
     LogOut, Save, Settings, Navigation, Layout, Briefcase,
     Code2, MessageSquare, FileText, ChevronRight, Plus,
     Trash2, Loader2, CheckCircle2, AlertCircle, ExternalLink,
-    Database
+    Database, LayoutGrid
 } from 'lucide-react';
 import { authService } from '@/services/authService';
 import { DEFAULT_CONTENT, GAS_CONFIG_KEY } from '@/lib/constants';
 import type {
     PageContent, NavLink, SocialLink, ExperienceEntry,
-    SkillCategory, SkillItem, GASConfig
+    SkillCategory, SkillItem, GASConfig, ProjectItem
 } from '@/types/content';
 
 // This interface defines the props for the CMSDashboard component
@@ -36,7 +36,7 @@ interface CMSDashboardProps {
 }
 
 // This type defines the available sidebar menu items  
-type MenuSection = 'navbar' | 'hero' | 'experiences' | 'skills' | 'cta' | 'footer' | 'settings';
+type MenuSection = 'navbar' | 'hero' | 'experiences' | 'projects' | 'skills' | 'cta' | 'footer' | 'settings';
 
 /**
  * This component renders the full CMS dashboard interface.
@@ -55,7 +55,12 @@ export default function CMSDashboard({ onLogout }: CMSDashboardProps) {
         try {
             const savedContent = localStorage.getItem('anggyedo_content');
             if (savedContent) {
-                setContent(JSON.parse(savedContent));
+                const parsed = JSON.parse(savedContent);
+                // Ensure projects exists for backwards compatibility
+                if (!parsed.projects) {
+                    parsed.projects = DEFAULT_CONTENT.projects;
+                }
+                setContent(parsed);
             }
             const savedConfig = localStorage.getItem(GAS_CONFIG_KEY);
             if (savedConfig) {
@@ -122,6 +127,7 @@ export default function CMSDashboard({ onLogout }: CMSDashboardProps) {
         { key: 'navbar', label: 'Navbar', icon: <Navigation className="w-4 h-4" /> },
         { key: 'hero', label: 'Hero Section', icon: <Layout className="w-4 h-4" /> },
         { key: 'experiences', label: 'Experiences', icon: <Briefcase className="w-4 h-4" /> },
+        { key: 'projects', label: 'Projects', icon: <LayoutGrid className="w-4 h-4" /> },
         { key: 'skills', label: 'Skills', icon: <Code2 className="w-4 h-4" /> },
         { key: 'cta', label: 'CTA Section', icon: <MessageSquare className="w-4 h-4" /> },
         { key: 'footer', label: 'Footer', icon: <FileText className="w-4 h-4" /> },
@@ -152,8 +158,8 @@ export default function CMSDashboard({ onLogout }: CMSDashboardProps) {
                             key={item.key}
                             onClick={() => setActiveSection(item.key)}
                             className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${activeSection === item.key
-                                    ? 'bg-teal-500/10 text-teal-600 dark:text-teal-400'
-                                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                                ? 'bg-teal-500/10 text-teal-600 dark:text-teal-400'
+                                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                                 }`}
                         >
                             {item.icon}
@@ -254,6 +260,9 @@ export default function CMSDashboard({ onLogout }: CMSDashboardProps) {
                             )}
                             {activeSection === 'experiences' && (
                                 <ExperiencesEditor content={content} setContent={setContent} />
+                            )}
+                            {activeSection === 'projects' && (
+                                <ProjectsEditor content={content} setContent={setContent} />
                             )}
                             {activeSection === 'skills' && (
                                 <SkillsEditor content={content} setContent={setContent} />
@@ -524,8 +533,8 @@ function ExperiencesEditor({ content, setContent }: EditorProps) {
                 <button
                     onClick={() => setEditingSection('professional')}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${editingSection === 'professional'
-                            ? 'bg-teal-500 text-white'
-                            : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                        ? 'bg-teal-500 text-white'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
                         }`}
                 >
                     Professional
@@ -533,8 +542,8 @@ function ExperiencesEditor({ content, setContent }: EditorProps) {
                 <button
                     onClick={() => setEditingSection('education')}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${editingSection === 'education'
-                            ? 'bg-teal-500 text-white'
-                            : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                        ? 'bg-teal-500 text-white'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
                         }`}
                 >
                     Education
@@ -702,6 +711,100 @@ function SkillsEditor({ content, setContent }: EditorProps) {
             <button onClick={addCategory} className="flex items-center space-x-2 text-teal-500 hover:text-teal-600 font-medium">
                 <Plus className="w-5 h-5" />
                 <span>Add Category</span>
+            </button>
+        </div>
+    );
+}
+
+/**
+ * This component handles editing of projects section content.
+ */
+function ProjectsEditor({ content, setContent }: EditorProps) {
+    const { projects } = content;
+
+    const updateSection = (field: 'title' | 'subtitle', value: string) => {
+        setContent((prev) => ({
+            ...prev,
+            projects: { ...prev.projects, [field]: value },
+        }));
+    };
+
+    const updateProject = (index: number, field: keyof ProjectItem, value: string | string[]) => {
+        setContent((prev) => {
+            const items = [...prev.projects.items];
+            items[index] = { ...items[index], [field]: value };
+            return { ...prev, projects: { ...prev.projects, items } };
+        });
+    };
+
+    const addProject = () => {
+        setContent((prev) => ({
+            ...prev,
+            projects: {
+                ...prev.projects,
+                items: [
+                    ...prev.projects.items,
+                    {
+                        id: `proj-${Date.now()}`,
+                        title: 'New Project',
+                        description: 'Description here...',
+                        imageUrl: '',
+                        technologies: [],
+                        projectUrl: '',
+                        githubUrl: ''
+                    },
+                ],
+            },
+        }));
+    };
+
+    const removeProject = (index: number) => {
+        setContent((prev) => ({
+            ...prev,
+            projects: {
+                ...prev.projects,
+                items: prev.projects.items.filter((_, i) => i !== index),
+            },
+        }));
+    };
+
+    return (
+        <div className="space-y-6">
+            <EditorCard title="Section Info">
+                <div className="space-y-4">
+                    <InputField label="Title" value={projects.title} onChange={(v) => updateSection('title', v)} />
+                    <InputField label="Subtitle" value={projects.subtitle} onChange={(v) => updateSection('subtitle', v)} />
+                </div>
+            </EditorCard>
+
+            {projects.items.map((project, index) => (
+                <EditorCard key={project.id} title={project.title}>
+                    <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                            <InputField label="Project Title" value={project.title} onChange={(v) => updateProject(index, 'title', v)} />
+                            <InputField label="Image URL" value={project.imageUrl} onChange={(v) => updateProject(index, 'imageUrl', v)} />
+                        </div>
+                        <TextAreaField label="Description" value={project.description} onChange={(v) => updateProject(index, 'description', v)} />
+                        <InputField
+                            label="Technologies (comma-separated)"
+                            value={project.technologies.join(', ')}
+                            onChange={(v) => updateProject(index, 'technologies', v.split(',').map((s) => s.trim()).filter(Boolean))}
+                        />
+                        <div className="grid grid-cols-2 gap-4">
+                            <InputField label="Project URL (Optional)" value={project.projectUrl || ''} onChange={(v) => updateProject(index, 'projectUrl', v)} />
+                            <InputField label="GitHub URL (Optional)" value={project.githubUrl || ''} onChange={(v) => updateProject(index, 'githubUrl', v)} />
+                        </div>
+                        <button onClick={() => removeProject(index)} className="flex items-center space-x-2 text-red-500 hover:text-red-600 text-sm font-medium">
+                            <Trash2 className="w-4 h-4" />
+                            <span>Remove Project</span>
+                        </button>
+                    </div>
+                </EditorCard>
+            ))}
+
+            <button onClick={addProject} className="flex items-center space-x-2 text-teal-500 hover:text-teal-600 font-medium">
+                <Plus className="w-5 h-5" />
+                <span>Add Project</span>
             </button>
         </div>
     );

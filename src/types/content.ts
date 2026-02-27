@@ -94,6 +94,24 @@ export interface FooterContent {
   builtWith: string;
 }
 
+// This interface defines a single project entry
+export interface ProjectItem {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  technologies: string[];
+  projectUrl?: string;
+  githubUrl?: string;
+}
+
+// This interface defines the projects section content
+export interface ProjectsContent {
+  title: string;
+  subtitle: string;
+  items: ProjectItem[];
+}
+
 // This interface defines the complete page content structure
 export interface PageContent {
   navbar: NavbarContent;
@@ -101,6 +119,7 @@ export interface PageContent {
   professionalExperiences: ExperiencesContent;
   earlierExperiences: ExperiencesContent;
   skills: SkillsContent;
+  projects: ProjectsContent;
   cta: CTAContent;
   footer: FooterContent;
 }

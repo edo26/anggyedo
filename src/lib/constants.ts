@@ -29,6 +29,7 @@ export const DEFAULT_CONTENT: PageContent = {
         links: [
             { label: 'Home', href: '#home', isActive: true },
             { label: 'Experience', href: '#experience' },
+            { label: 'Projects', href: '#projects' },
             { label: 'Skills', href: '#skills' },
         ],
         ctaText: 'Contact Me',
@@ -207,6 +208,30 @@ export const DEFAULT_CONTENT: PageContent = {
                     { name: 'Indonesian', subtitle: 'Native' },
                 ],
             },
+        ],
+    },
+    projects: {
+        title: 'Featured Projects',
+        subtitle: 'A selection of my recent work',
+        items: [
+            {
+                id: 'proj-1',
+                title: 'E-Commerce Dashboard',
+                description: 'A comprehensive admin dashboard for e-commerce with real-time analytics.',
+                imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',
+                technologies: ['React', 'Next.js', 'Tailwind CSS', 'Chart.js'],
+                projectUrl: '#',
+                githubUrl: '#',
+            },
+            {
+                id: 'proj-2',
+                title: 'AI Image Generator',
+                description: 'A web application that generates images from text using OpenAI DALL-E API.',
+                imageUrl: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80',
+                technologies: ['Vue.js', 'Nuxt.js', 'Node.js', 'OpenAI API'],
+                projectUrl: '#',
+                githubUrl: '#',
+            }
         ],
     },
     cta: {
