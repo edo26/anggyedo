@@ -64,6 +64,11 @@ function doPost(e) {
     if (body.action === 'login') {
       return handleLogin(body.username, body.password);
     }
+
+    // Handle change credentials action
+    if (body.action === 'changeCredentials') {
+      return handleChangeCredentials(body.newUsername, body.newPassword);
+    }
     
     // Handle content update action
     if (body.action === 'update') {
@@ -104,6 +109,30 @@ function handleLogin(username, password) {
     }
     
     return createJsonResponse({ success: false, error: 'Invalid credentials' });
+  } catch (error) {
+    return createJsonResponse({ success: false, error: error.message });
+  }
+}
+
+/**
+ * This function updates the admin login credentials.
+ * Modifies the first credential entry in the Settings sheet.
+ */
+function handleChangeCredentials(newUsername, newPassword) {
+  try {
+    let settingsSheet = SpreadsheetApp.getActiveSpreadsheet()
+      .getSheetByName(SETTINGS_SHEET_NAME);
+    
+    if (!settingsSheet) {
+      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      settingsSheet = ss.insertSheet(SETTINGS_SHEET_NAME);
+      settingsSheet.getRange('A1:B1').setValues([['Username', 'Password']]);
+    }
+    
+    // Always update the first credentials row (row 2)
+    settingsSheet.getRange('A2:B2').setValues([[newUsername, newPassword]]);
+    
+    return createJsonResponse({ success: true, message: 'Credentials updated successfully' });
   } catch (error) {
     return createJsonResponse({ success: false, error: error.message });
   }

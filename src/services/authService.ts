@@ -60,7 +60,41 @@ export class AuthService {
             localStorage.setItem(AUTH_TOKEN_KEY, JSON.stringify(session));
             return true;
         } catch (error) {
-            console.error('Login error:', error);
+            return false;
+        }
+    }
+
+    /**
+     * This function attempts to change the admin credentials on the gas backend.
+     */
+    async changeCredentials(newUsername: string, newPassword: string): Promise<boolean> {
+        try {
+            const gasConfig = this.getGASConfig();
+
+            if (gasConfig?.scriptUrl) {
+                const response = await fetch(gasConfig.scriptUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'changeCredentials', newUsername, newPassword }),
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    // Update current session
+                    const sessionStr = localStorage.getItem(AUTH_TOKEN_KEY);
+                    if (sessionStr) {
+                        const session: SessionData = JSON.parse(sessionStr);
+                        session.username = newUsername;
+                        localStorage.setItem(AUTH_TOKEN_KEY, JSON.stringify(session));
+                    }
+                    return true;
+                }
+                return false;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.error('Change credentials error:', error);
             return false;
         }
     }

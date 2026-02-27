@@ -154,10 +154,6 @@ export default function CMSLogin({ onLoginSuccess }: CMSLoginProps) {
                         </button>
                     </form>
 
-                    {/* Footer Hint */}
-                    <p className="text-center text-xs text-slate-400 dark:text-slate-500 mt-6">
-                        Default credentials: <span className="font-mono text-slate-500 dark:text-slate-400">admin / admin123</span>
-                    </p>
                 </div>
             </motion.div>
         </div>

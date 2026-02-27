@@ -863,12 +863,78 @@ function FooterEditor({ content, setContent }: EditorProps) {
 }
 
 /**
- * This component handles Google Apps Script configuration.
- * Allows admins to set up the connection to Google Sheets backend.
+ * This component handles Google Apps Script configuration and Account Settings.
+ * Allows admins to set up the connection to Google Sheets backend and change credentials.
  */
 function GASSettings({ config, setConfig }: { config: GASConfig; setConfig: React.Dispatch<React.SetStateAction<GASConfig>> }) {
+    const [newUsername, setNewUsername] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [credStatus, setCredStatus] = useState<{ type: 'idle' | 'success' | 'error', msg: string }>({ type: 'idle', msg: '' });
+    const [isUpdatingCreds, setIsUpdatingCreds] = useState(false);
+
+    const handleChangeCredentials = async () => {
+        if (!config.scriptUrl) {
+            setCredStatus({ type: 'error', msg: 'Please configure and save GAS URL first.' });
+            return;
+        }
+        if (!newUsername || !newPassword) {
+            setCredStatus({ type: 'error', msg: 'Both username and password are required.' });
+            return;
+        }
+        setIsUpdatingCreds(true);
+        setCredStatus({ type: 'idle', msg: '' });
+
+        const success = await authService.changeCredentials(newUsername, newPassword);
+
+        setIsUpdatingCreds(false);
+        if (success) {
+            setCredStatus({ type: 'success', msg: 'Credentials updated successfully!' });
+            setNewUsername('');
+            setNewPassword('');
+        } else {
+            setCredStatus({ type: 'error', msg: 'Failed to update credentials. Check your GAS URL.' });
+        }
+    };
+
     return (
         <div className="space-y-6">
+            <EditorCard title="Account Credentials">
+                <div className="space-y-4">
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                        Update your CMS admin username and password. This requires a saved and working Google Apps Script URL.
+                    </p>
+                    <InputField
+                        label="New Username"
+                        value={newUsername}
+                        onChange={setNewUsername}
+                    />
+                    <div>
+                        <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            New Password
+                        </label>
+                        <input
+                            type="password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all text-sm"
+                        />
+                    </div>
+                    <button
+                        onClick={handleChangeCredentials}
+                        disabled={isUpdatingCreds}
+                        className="flex items-center space-x-2 bg-indigo-500 hover:bg-indigo-600 disabled:bg-indigo-500/50 text-white px-4 py-3 rounded-lg text-sm font-medium transition-all"
+                    >
+                        {isUpdatingCreds ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                        <span>{isUpdatingCreds ? 'Updating...' : 'Update Credentials'}</span>
+                    </button>
+                    {credStatus.msg && (
+                        <p className={`text-sm font-medium ${credStatus.type === 'success' ? 'text-green-500' : 'text-red-500'}`}>
+                            {credStatus.msg}
+                        </p>
+                    )}
+                </div>
+            </EditorCard>
+
             <EditorCard title="Google Apps Script Configuration">
                 <div className="space-y-4">
                     <div className="bg-teal-50 dark:bg-teal-900/20 rounded-lg p-4 text-sm text-teal-700 dark:text-teal-300">
@@ -897,80 +963,74 @@ function GASSettings({ config, setConfig }: { config: GASConfig; setConfig: Reac
 
             <EditorCard title="Google Apps Script Code">
                 <div className="bg-slate-900 rounded-lg p-4 overflow-x-auto">
-                    <pre className="text-sm text-green-400 font-mono whitespace-pre-wrap">
+                    <pre className="text-xs text-green-400 font-mono whitespace-pre-wrap">
                         {`// Google Apps Script - Portfolio CMS Backend
 // Deploy as Web App: Execute as Me, Access Anyone
 
-const SHEET_NAME = 'Content';
+const CONTENT_SHEET_NAME = 'Content';
+const SETTINGS_SHEET_NAME = 'Settings';
 
 function doGet() {
   try {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet()
-      .getSheetByName(SHEET_NAME);
-    if (!sheet) {
-      return jsonResponse({ error: 'Sheet not found' }, 404);
-    }
-    
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CONTENT_SHEET_NAME);
+    if (!sheet) return createJsonResponse({ error: 'Sheet not found' });
     const data = sheet.getRange('A1').getValue();
-    if (!data) {
-      return jsonResponse({});
-    }
-    
-    return jsonResponse(JSON.parse(data));
-  } catch (e) {
-    return jsonResponse({ error: e.message }, 500);
-  }
+    return createJsonResponse(data ? JSON.parse(data) : {});
+  } catch (e) { return createJsonResponse({ error: e.message }); }
 }
 
 function doPost(e) {
   try {
     const body = JSON.parse(e.postData.contents);
-    const sheet = SpreadsheetApp.getActiveSpreadsheet()
-      .getSheetByName(SHEET_NAME);
-    
-    if (!sheet) {
-      const ss = SpreadsheetApp.getActiveSpreadsheet();
-      ss.insertSheet(SHEET_NAME);
-    }
-    
-    const targetSheet = SpreadsheetApp.getActiveSpreadsheet()
-      .getSheetByName(SHEET_NAME);
-    
-    if (body.action === 'login') {
-      // Check credentials from Settings sheet
-      const settingsSheet = SpreadsheetApp.getActiveSpreadsheet()
-        .getSheetByName('Settings');
-      if (settingsSheet) {
-        const creds = settingsSheet.getRange('A2:B2').getValues();
-        if (creds[0][0] === body.username 
-            && creds[0][1] === body.password) {
-          return jsonResponse({ success: true });
-        }
-      }
-      // Default fallback credentials
-      if (body.username === 'admin' 
-          && body.password === 'admin123') {
-        return jsonResponse({ success: true });
-      }
-      return jsonResponse({ success: false });
-    }
-    
-    if (body.action === 'update') {
-      targetSheet.getRange('A1')
-        .setValue(JSON.stringify(body.data));
-      return jsonResponse(body.data);
-    }
-    
-    return jsonResponse({ error: 'Invalid action' }, 400);
-  } catch (e) {
-    return jsonResponse({ error: e.message }, 500);
-  }
+    if (body.action === 'login') return handleLogin(body.username, body.password);
+    if (body.action === 'changeCredentials') return handleChangeCredentials(body.newUsername, body.newPassword);
+    if (body.action === 'update') return handleContentUpdate(body.data);
+    return createJsonResponse({ error: 'Invalid action' });
+  } catch (e) { return createJsonResponse({ error: e.message }); }
 }
 
-function jsonResponse(data, code) {
-  return ContentService
-    .createTextOutput(JSON.stringify(data))
-    .setMimeType(ContentService.MimeType.JSON);
+function handleLogin(username, password) {
+  try {
+    const settingsSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SETTINGS_SHEET_NAME);
+    if (settingsSheet) {
+      const lastRow = settingsSheet.getLastRow();
+      if (lastRow >= 2) {
+        const credentials = settingsSheet.getRange(2, 1, lastRow - 1, 2).getValues();
+        for (let i = 0; i < credentials.length; i++) {
+          if (credentials[i][0] === username && credentials[i][1] === password) {
+            return createJsonResponse({ success: true, username: username });
+          }
+        }
+      }
+    }
+    if (username === 'admin' && password === 'admin123') return createJsonResponse({ success: true, username: username });
+    return createJsonResponse({ success: false, error: 'Invalid credentials' });
+  } catch (e) { return createJsonResponse({ success: false, error: e.message }); }
+}
+
+function handleChangeCredentials(newUsername, newPassword) {
+  try {
+    let settingsSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SETTINGS_SHEET_NAME);
+    if (!settingsSheet) {
+      settingsSheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet(SETTINGS_SHEET_NAME);
+      settingsSheet.getRange('A1:B1').setValues([['Username', 'Password']]);
+    }
+    settingsSheet.getRange('A2:B2').setValues([[newUsername, newPassword]]);
+    return createJsonResponse({ success: true, message: 'Credentials updated successfully' });
+  } catch (e) { return createJsonResponse({ success: false, error: e.message }); }
+}
+
+function handleContentUpdate(data) {
+  try {
+    let sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CONTENT_SHEET_NAME);
+    if (!sheet) sheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet(CONTENT_SHEET_NAME);
+    sheet.getRange('A1').setValue(JSON.stringify(data));
+    return createJsonResponse(data);
+  } catch (e) { return createJsonResponse({ error: e.message }); }
+}
+
+function createJsonResponse(data) {
+  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
 }`}
                     </pre>
                 </div>
