@@ -88,12 +88,12 @@ export default function ProjectsSection() {
                                 {/* Overlay with actions */}
                                 <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
                                     {project.projectUrl && project.projectUrl !== '#' && (
-                                        <a href={project.projectUrl} target="_blank" rel="noopener noreferrer" className="p-3 bg-white text-slate-900 rounded-full hover:bg-teal-500 hover:text-white transition-colors" aria-label="View Project">
+                                        <a href={project.projectUrl} target="_blank" rel="noopener noreferrer" className="p-3 bg-white text-slate-900 rounded-full hover:bg-slate-500 hover:text-white transition-colors" aria-label="View Project">
                                             <ExternalLink className="w-5 h-5" />
                                         </a>
                                     )}
                                     {project.githubUrl && project.githubUrl !== '#' && (
-                                        <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="p-3 bg-white text-slate-900 rounded-full hover:bg-teal-500 hover:text-white transition-colors" aria-label="View Code">
+                                        <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="p-3 bg-white text-slate-900 rounded-full hover:bg-slate-500 hover:text-white transition-colors" aria-label="View Code">
                                             <Github className="w-5 h-5" />
                                         </a>
                                     )}
@@ -104,7 +104,7 @@ export default function ProjectsSection() {
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 line-clamp-2 text-sm">{project.description}</p>
                                 <div className="flex flex-wrap gap-2">
                                     {project.technologies.map((tech, idx) => (
-                                        <span key={idx} className="px-3 py-1 bg-teal-50 dark:bg-teal-400/10 text-teal-600 dark:text-teal-400 rounded-full text-xs font-medium border border-teal-500/20">
+                                        <span key={idx} className="px-3 py-1 bg-slate-50 dark:bg-slate-400/10 text-slate-600 dark:text-slate-400 rounded-full text-xs font-medium border border-slate-500/20">
                                             {tech}
                                         </span>
                                     ))}

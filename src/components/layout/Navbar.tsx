@@ -64,34 +64,34 @@ export default function Navbar() {
             initial={{ y: -100 }}
             animate={{ y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-                ? 'bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-lg shadow-black/5 dark:shadow-black/20'
-                : 'bg-transparent'
+            className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 w-[95%] max-w-5xl rounded-full ${isScrolled
+                ? 'bg-white/50 dark:bg-slate-900/50 backdrop-blur-2xl shadow-2xl shadow-black/10 dark:shadow-black/40 border border-white/30 dark:border-slate-800'
+                : 'bg-white/30 dark:bg-slate-900/30 backdrop-blur-md shadow-lg shadow-black/5 border border-white/20 dark:border-slate-800'
                 }`}
         >
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="px-5 sm:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <a
                         href="#home"
                         onClick={() => handleNavClick('#home')}
-                        className="flex items-center space-x-1 group"
+                        className="flex items-center space-x-2 group"
                     >
-                        <span className="bg-teal-500 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm group-hover:scale-110 transition-transform">
+                        <span className="bg-slate-800 dark:bg-white text-white dark:text-slate-900 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm group-hover:scale-110 transition-transform shadow-inner">
                             {navbar.logo}
                         </span>
-                        <span className="text-lg font-bold text-slate-900 dark:text-white">
+                        <span className="text-sm font-bold tracking-widest text-slate-900 dark:text-white uppercase letter-spacing-[0.2em] ml-1">
                             {navbar.logoAccent}
                         </span>
                     </a>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center space-x-8">
+                    <div className="hidden md:flex items-center space-x-1 bg-white/40 dark:bg-slate-800/40 backdrop-blur-sm rounded-full p-1 px-4 border border-white/40 dark:border-slate-700/50">
                         {navbar.links.map((link) => (
                             <button
                                 key={link.href}
                                 onClick={() => handleNavClick(link.href)}
-                                className="text-slate-600 dark:text-slate-300 hover:text-teal-500 dark:hover:text-teal-400 transition-colors text-sm font-medium"
+                                className="text-slate-700 dark:text-slate-300 hover:text-black dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50 px-4 py-1.5 rounded-full transition-all text-sm font-medium"
                             >
                                 {link.label}
                             </button>
@@ -118,10 +118,9 @@ export default function Navbar() {
                             href={navbar.ctaUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="hidden md:flex items-center space-x-2 bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-full text-sm font-medium transition-all hover:shadow-lg hover:shadow-teal-500/25"
+                            className="hidden md:flex items-center space-x-2 bg-slate-900 dark:bg-white hover:bg-black dark:hover:bg-slate-100 text-white dark:text-slate-900 px-6 py-2 rounded-full text-sm font-semibold transition-all shadow-md hover:shadow-xl"
                         >
                             <span>{navbar.ctaText}</span>
-                            <ExternalLink className="w-3.5 h-3.5" />
                         </a>
 
                         {/* Mobile Menu Toggle */}
@@ -144,17 +143,17 @@ export default function Navbar() {
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-700"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className="md:hidden absolute top-[110%] left-0 right-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl rounded-3xl border border-white/20 dark:border-slate-800 shadow-2xl p-4 overflow-hidden"
                     >
-                        <div className="px-4 py-4 space-y-2">
+                        <div className="space-y-1">
                             {navbar.links.map((link) => (
                                 <button
                                     key={link.href}
                                     onClick={() => handleNavClick(link.href)}
-                                    className="block w-full text-left py-2 px-3 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                                    className="block w-full text-center py-3 px-4 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all font-medium"
                                 >
                                     {link.label}
                                 </button>
@@ -163,7 +162,7 @@ export default function Navbar() {
                                 href={navbar.ctaUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="block w-full text-center bg-teal-500 text-white py-2 px-3 rounded-full font-medium mt-2"
+                                className="block w-full text-center bg-slate-900 dark:bg-white text-white dark:text-slate-900 py-3 px-4 rounded-xl font-semibold mt-4 shadow-md"
                             >
                                 {navbar.ctaText}
                             </a>

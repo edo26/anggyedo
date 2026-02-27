@@ -38,7 +38,7 @@ export default function ExperienceSection({ data, id, variant = 'professional' }
                     transition={{ duration: 0.6 }}
                     className="text-center mb-16"
                 >
-                    <div className="inline-flex items-center space-x-2 bg-teal-500/10 text-teal-600 dark:text-teal-400 text-xs font-semibold px-4 py-2 rounded-full mb-4">
+                    <div className="inline-flex items-center space-x-2 bg-slate-100/50 dark:bg-slate-800/50 backdrop-blur-md text-slate-800 dark:text-slate-200 text-xs font-semibold px-4 py-2 rounded-full mb-4 border border-slate-200/50 dark:border-slate-700/50">
                         <SectionIcon className="w-4 h-4" />
                         <span>{variant === 'professional' ? 'Career' : 'Education'}</span>
                     </div>
@@ -50,7 +50,7 @@ export default function ExperienceSection({ data, id, variant = 'professional' }
                 {/* Timeline */}
                 <div className="relative">
                     {/* Vertical Timeline Line */}
-                    <div className="absolute left-0 md:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-teal-500 via-teal-500/50 to-transparent" />
+                    <div className="absolute left-0 md:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-slate-400 via-slate-300/50 to-transparent dark:from-slate-600 dark:via-slate-700/50" />
 
                     {/* Experience Entries */}
                     <div className="space-y-12">
@@ -64,17 +64,17 @@ export default function ExperienceSection({ data, id, variant = 'professional' }
                                 className="relative pl-8 md:pl-20"
                             >
                                 {/* Timeline Dot */}
-                                <div className="absolute left-0 md:left-8 top-2 -translate-x-1/2 w-3 h-3 bg-teal-500 rounded-full ring-4 ring-white dark:ring-slate-950 z-10" />
+                                <div className="absolute left-0 md:left-8 top-2 -translate-x-1/2 w-3 h-3 bg-slate-400 dark:bg-slate-500 rounded-full ring-4 ring-white dark:ring-slate-950 z-10" />
 
                                 {/* Experience Card */}
-                                <div className="bg-white dark:bg-slate-900/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 hover:border-teal-500/30 dark:hover:border-teal-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-teal-500/5 group">
+                                <div className="bg-white/50 dark:bg-slate-900/50 backdrop-blur-md rounded-[2rem] p-6 border border-slate-200/50 dark:border-slate-800/50 hover:border-slate-400/30 dark:hover:border-slate-600/30 transition-all duration-300 hover:shadow-2xl hover:shadow-black/5 group">
                                     {/* Header */}
                                     <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
                                         <div>
-                                            <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-teal-500 transition-colors">
+                                            <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors">
                                                 {entry.role}
                                             </h3>
-                                            <p className="text-sm text-teal-600 dark:text-teal-400 font-medium">
+                                            <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">
                                                 {entry.company}
                                             </p>
                                         </div>
@@ -93,7 +93,7 @@ export default function ExperienceSection({ data, id, variant = 'professional' }
                                         <div className="space-y-2 mb-4">
                                             {entry.achievements.map((achievement, achIndex) => (
                                                 <div key={achIndex} className="flex items-start space-x-2">
-                                                    <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                                                    <CheckCircle2 className="w-4 h-4 text-slate-400 dark:text-slate-500 mt-0.5 flex-shrink-0" />
                                                     <span className="text-sm text-slate-600 dark:text-slate-400">
                                                         {achievement}
                                                     </span>
@@ -108,7 +108,7 @@ export default function ExperienceSection({ data, id, variant = 'professional' }
                                             {entry.technologies.map((tech) => (
                                                 <span
                                                     key={tech}
-                                                    className="text-xs px-2.5 py-1 rounded-full bg-teal-500/10 text-teal-600 dark:text-teal-400 font-medium"
+                                                    className="text-xs px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-medium border border-slate-200 dark:border-slate-700"
                                                 >
                                                     {tech}
                                                 </span>
