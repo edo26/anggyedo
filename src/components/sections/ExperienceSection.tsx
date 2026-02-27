@@ -24,125 +24,100 @@ interface ExperienceSectionProps {
  * achievement lists, and technology tags.
  */
 export default function ExperienceSection({ data, id, variant = 'professional' }: ExperienceSectionProps) {
+    // This icon selection is based on the section variant
     const SectionIcon = variant === 'professional' ? Briefcase : GraduationCap;
 
     return (
-        <section id={id} className="py-24 relative bg-white dark:bg-slate-900 overflow-hidden">
+        <section id={id} className="py-20 relative">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid lg:grid-cols-2 gap-16 items-center">
+                {/* Section Header */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-100px' }}
+                    transition={{ duration: 0.6 }}
+                    className="text-center mb-16"
+                >
+                    <div className="inline-flex items-center space-x-2 bg-teal-500/10 text-teal-600 dark:text-teal-400 text-xs font-semibold px-4 py-2 rounded-full mb-4">
+                        <SectionIcon className="w-4 h-4" />
+                        <span>{variant === 'professional' ? 'Career' : 'Education'}</span>
+                    </div>
+                    <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
+                        {data.title}
+                    </h2>
+                </motion.div>
 
-                    {/* Left Column - 3D Illustration */}
-                    <motion.div
-                        initial={{ opacity: 0, x: -50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, margin: '-100px' }}
-                        transition={{ duration: 0.8 }}
-                        className="relative w-full aspect-square max-w-md mx-auto"
-                    >
-                        {/* Yellow Circle Background - matches reference */}
-                        <div className="absolute inset-4 rounded-full bg-[#FFD166] dark:bg-[#FFD166]/80 -z-10" />
+                {/* Timeline */}
+                <div className="relative">
+                    {/* Vertical Timeline Line */}
+                    <div className="absolute left-0 md:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-teal-500 via-teal-500/50 to-transparent" />
 
-                        {/* Floating 3D image */}
-                        <div className="relative w-full h-full animate-[float_6s_ease-in-out_infinite]">
-                            <img
-                                src="/about_3d.png"
-                                alt="Experience Professional 3D"
-                                className="object-contain w-full h-full drop-shadow-2xl scale-110"
-                            />
-                        </div>
-
-                        {/* Decorative dots inspired by reference */}
-                        <div className="absolute top-1/2 -left-10 w-20 h-20 border-4 border-slate-200 dark:border-slate-800 rounded-lg animate-spin" style={{ animationDuration: '20s' }} />
-                        <div className="absolute bottom-10 -right-5 w-4 h-4 bg-teal-400 rounded-full animate-pulse" />
-                    </motion.div>
-
-                    {/* Right Column - Content */}
-                    <div className="space-y-8">
-                        {/* Header Area */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                            className="space-y-4"
-                        >
-                            <div className="inline-flex items-center space-x-2 bg-slate-100 text-slate-500 text-xs font-bold px-4 py-2 rounded-full tracking-wider uppercase mb-1">
-                                <SectionIcon className="w-4 h-4 text-[#FFD166]" />
-                                <span>{variant === 'professional' ? 'Experience & Background' : 'Education'}</span>
-                            </div>
-                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0A1128] dark:text-white leading-tight">
-                                Delivering <span className="text-teal-500 border-b-4 border-[#FFD166]">Excellence</span> <br /> in Every {variant === 'professional' ? 'Project' : 'Class'}
-                            </h2>
-                            <p className="text-slate-500 text-base leading-relaxed">
-                                Dramatically supply transparent deliverables before backward comp internal or "organic" sources. Building scalable and robust solutions for enterprise clients worldwide.
-                            </p>
-                        </motion.div>
-
-                        {/* Experience Grid */}
-                        <div className="grid gap-6">
-                            {data.entries.map((entry, index) => (
-                                <motion.div
-                                    key={entry.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                                    className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-700 hover:border-teal-400 transition-colors group"
-                                >
-                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-                                        <div className="flex items-start space-x-4">
-                                            <div className="w-12 h-12 rounded-xl bg-teal-50 text-teal-500 flex items-center justify-center shrink-0 group-hover:bg-teal-500 group-hover:text-white transition-colors">
-                                                <CheckCircle2 className="w-6 h-6" />
-                                            </div>
-                                            <div>
-                                                <h3 className="text-lg font-bold text-[#0A1128] dark:text-white group-hover:text-teal-500">
-                                                    {entry.role}
-                                                </h3>
-                                                <p className="text-sm font-semibold text-teal-600">
-                                                    {entry.company}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="pl-16 sm:pl-0">
-                                            <span className="text-xs bg-slate-100 dark:bg-slate-900 text-slate-500 px-3 py-1.5 rounded-full font-bold whitespace-nowrap">
-                                                {entry.period}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div className="pl-16">
-                                        {entry.technologies.length > 0 && (
-                                            <div className="flex flex-wrap gap-2 mt-3">
-                                                {entry.technologies.map((tech) => (
-                                                    <span
-                                                        key={tech}
-                                                        className="text-[10px] px-2 py-1 rounded-md bg-slate-50 border border-slate-200 text-slate-600 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-400 font-bold"
-                                                    >
-                                                        {tech}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-
-                        {/* CTA Button similar to reference */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.5 }}
-                            className="pt-6"
-                        >
-                            <a
-                                href="#contact"
-                                className="inline-block bg-[#FCA311] hover:bg-[#E59800] text-white px-8 py-3.5 rounded-md font-bold text-sm tracking-wide transition-colors shadow-lg shadow-[#FCA311]/20"
+                    {/* Experience Entries */}
+                    <div className="space-y-12">
+                        {data.entries.map((entry, index) => (
+                            <motion.div
+                                key={entry.id}
+                                initial={{ opacity: 0, x: -30 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true, margin: '-50px' }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                                className="relative pl-8 md:pl-20"
                             >
-                                MORE DETAILS
-                            </a>
-                        </motion.div>
+                                {/* Timeline Dot */}
+                                <div className="absolute left-0 md:left-8 top-2 -translate-x-1/2 w-3 h-3 bg-teal-500 rounded-full ring-4 ring-white dark:ring-slate-950 z-10" />
+
+                                {/* Experience Card */}
+                                <div className="bg-white dark:bg-slate-900/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 hover:border-teal-500/30 dark:hover:border-teal-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-teal-500/5 group">
+                                    {/* Header */}
+                                    <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
+                                        <div>
+                                            <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-teal-500 transition-colors">
+                                                {entry.role}
+                                            </h3>
+                                            <p className="text-sm text-teal-600 dark:text-teal-400 font-medium">
+                                                {entry.company}
+                                            </p>
+                                        </div>
+                                        <span className="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full font-medium">
+                                            {entry.period}
+                                        </span>
+                                    </div>
+
+                                    {/* Description */}
+                                    <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4 italic">
+                                        {entry.description}
+                                    </p>
+
+                                    {/* Achievements */}
+                                    {entry.achievements.length > 0 && (
+                                        <div className="space-y-2 mb-4">
+                                            {entry.achievements.map((achievement, achIndex) => (
+                                                <div key={achIndex} className="flex items-start space-x-2">
+                                                    <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                                                    <span className="text-sm text-slate-600 dark:text-slate-400">
+                                                        {achievement}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* Technologies */}
+                                    {entry.technologies.length > 0 && (
+                                        <div className="flex flex-wrap gap-2">
+                                            {entry.technologies.map((tech) => (
+                                                <span
+                                                    key={tech}
+                                                    className="text-xs px-2.5 py-1 rounded-full bg-teal-500/10 text-teal-600 dark:text-teal-400 font-medium"
+                                                >
+                                                    {tech}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </motion.div>
+                        ))}
                     </div>
                 </div>
             </div>

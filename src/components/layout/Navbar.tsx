@@ -24,7 +24,6 @@ export default function Navbar() {
     const [mounted, setMounted] = useState(false);
 
     // This effect prevents hydration mismatch by waiting for mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         setMounted(true);
     }, []);

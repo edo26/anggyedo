@@ -27,7 +27,7 @@ import { authService } from '@/services/authService';
 import { DEFAULT_CONTENT, GAS_CONFIG_KEY } from '@/lib/constants';
 import type {
     PageContent, NavLink, SocialLink, ExperienceEntry,
-    SkillItem, GASConfig, ProjectItem
+    SkillCategory, SkillItem, GASConfig, ProjectItem
 } from '@/types/content';
 
 // This interface defines the props for the CMSDashboard component

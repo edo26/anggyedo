@@ -135,32 +135,60 @@ export default function HeroSection() {
                         </motion.div>
                     </div>
 
-                    {/* Right Column - 3D Illustration */}
+                    {/* Right Column - Profile Card */}
                     <motion.div
                         variants={itemVariants}
-                        className="flex justify-center lg:justify-end relative w-full h-[350px] sm:h-[450px] lg:h-[600px] z-10"
+                        className="flex justify-center lg:justify-end relative"
                     >
-                        <div className="relative w-full h-full animate-[float_6s_ease-in-out_infinite]">
-                            <Image
-                                src="/hero_3d.png"
-                                alt="Modern Web Development 3D Illustration"
-                                fill
-                                className="object-contain object-right drop-shadow-2xl"
-                                sizes="(max-width: 768px) 100vw, 50vw"
-                                priority
+                        <div className="relative">
+                            {/* Glassmorphism Profile Card */}
+                            <div className="w-72 h-80 sm:w-80 sm:h-96 rounded-2xl bg-gradient-to-br from-teal-400/20 to-cyan-500/20 dark:from-teal-400/10 dark:to-cyan-500/10 backdrop-blur-sm border border-white/20 dark:border-slate-700/30 shadow-2xl overflow-hidden relative group">
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent z-10" />
+                                <Image
+                                    src={hero.profileImageUrl}
+                                    alt={`${hero.name} profile`}
+                                    fill
+                                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                                    priority
+                                />
+
+                                {/* Status Badge - Bottom of card */}
+                                <div className="absolute bottom-4 left-4 right-4 z-20">
+                                    <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 border border-white/10">
+                                        <div className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse" />
+                                        <span className="text-white text-sm font-medium">
+                                            {hero.statusText}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Floating Experience Badge */}
+                            <motion.div
+                                animate={{ y: [-5, 5, -5] }}
+                                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                                className="absolute -top-4 -right-4 sm:-right-8 bg-white dark:bg-slate-800 rounded-2xl shadow-xl px-5 py-3 border border-slate-200 dark:border-slate-700"
+                            >
+                                <div className="text-center">
+                                    <div className="text-2xl font-bold bg-gradient-to-r from-teal-500 to-cyan-400 bg-clip-text text-transparent">
+                                        {hero.yearsExperience}
+                                    </div>
+                                    <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                                        Years Experience
+                                    </div>
+                                </div>
+                            </motion.div>
+
+                            {/* Decorative floating dots */}
+                            <motion.div
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                                className="absolute -bottom-6 -left-6 w-16 h-16 border-2 border-teal-500/30 rounded-full"
                             />
                         </div>
-
-                        {/* Decorative floating elements inspired by reference */}
-                        <div className="absolute top-10 right-10 w-4 h-4 rounded-full bg-yellow-400 animate-pulse" />
-                        <div className="absolute bottom-20 left-10 w-6 h-6 rounded-sm bg-teal-400 rotate-45 animate-[float_8s_ease-in-out_infinite]" style={{ animationDelay: '1s' }} />
                     </motion.div>
                 </motion.div>
             </div>
-
-            {/* Dark Blue Diagonal Background element inspired by reference */}
-            <div className="absolute bottom-0 left-0 w-full h-[35%] bg-[#0a1128] transform -skew-y-3 origin-bottom-right rounded-tl-[100px] dark:bg-slate-900" />
-            <div className="absolute bottom-0 left-0 w-full h-[20%] bg-[#0a1128] dark:bg-slate-900" />
         </section>
     );
 }
