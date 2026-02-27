@@ -21,6 +21,7 @@ export default function AdminPage() {
     const [isChecking, setIsChecking] = useState(true);
 
     // This effect checks the current auth state on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         const authState = authService.getAuthState();
         setIsAuthenticated(authState.isAuthenticated);

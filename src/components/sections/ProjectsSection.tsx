@@ -29,90 +29,131 @@ export default function ProjectsSection() {
     };
 
     const itemVariants = {
-        hidden: { opacity: 0, scale: 0.95 },
-        visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: 'easeOut' as const } },
+        hidden: { opacity: 0, y: 30 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' as const } },
     };
 
     if (!projects || !projects.items || projects.items.length === 0) return null;
 
     return (
-        <section id="projects" className="py-20 relative bg-slate-50/50 dark:bg-slate-900/20">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="projects" className="py-24 relative bg-[#0A1128] overflow-hidden">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Header matching Reference "OUR SERVICES" */}
                 <div className="text-center max-w-2xl mx-auto mb-16">
-                    <motion.h2
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.5 }}
-                        className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4"
+                        className="text-[#FFD166] font-bold text-sm tracking-[0.2em] uppercase mb-4"
                     >
-                        {projects.title}
+                        Portfolio
+                    </motion.div>
+                    <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
+                        className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight"
+                    >
+                        {projects.title || "Projects That You Can Rely On"}
                     </motion.h2>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: 0.1 }}
-                        className="text-slate-600 dark:text-slate-400"
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                        className="text-slate-400"
                     >
                         {projects.subtitle}
                     </motion.p>
                 </div>
 
+                {/* Project Cards Grid */}
                 <motion.div
                     variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: "-100px" }}
-                    className="grid md:grid-cols-2 gap-8"
+                    className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
                 >
                     {projects.items.map((project) => (
                         <motion.div
                             key={project.id}
                             variants={itemVariants}
-                            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden group hover:shadow-xl transition-shadow"
+                            className="bg-[#101A36] dark:bg-slate-900 border border-white/5 rounded-2xl overflow-hidden group hover:-translate-y-2 transition-transform duration-300 relative flex flex-col"
                         >
-                            <div className="relative h-60 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                            {/* Accent line on hover */}
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#FFD166] to-[#06D6A0] scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 z-20" />
+
+                            <div className="relative h-48 w-full overflow-hidden bg-[#0A1128]">
                                 {project.imageUrl ? (
                                     <Image
                                         src={project.imageUrl}
                                         alt={project.title}
                                         fill
-                                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                        className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
                                     />
                                 ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-slate-400">
+                                    <div className="w-full h-full flex items-center justify-center text-slate-500">
                                         No Image
                                     </div>
                                 )}
                                 {/* Overlay with actions */}
-                                <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
+                                <div className="absolute inset-0 bg-[#0A1128]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
                                     {project.projectUrl && project.projectUrl !== '#' && (
-                                        <a href={project.projectUrl} target="_blank" rel="noopener noreferrer" className="p-3 bg-white text-slate-900 rounded-full hover:bg-teal-500 hover:text-white transition-colors" aria-label="View Project">
+                                        <a href={project.projectUrl} target="_blank" rel="noopener noreferrer" className="p-3 bg-[#FFD166] text-[#0A1128] rounded-full hover:bg-white transition-colors hover:scale-110 transform" aria-label="View Project">
                                             <ExternalLink className="w-5 h-5" />
                                         </a>
                                     )}
                                     {project.githubUrl && project.githubUrl !== '#' && (
-                                        <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="p-3 bg-white text-slate-900 rounded-full hover:bg-teal-500 hover:text-white transition-colors" aria-label="View Code">
+                                        <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="p-3 bg-white text-[#0A1128] rounded-full hover:bg-[#FFD166] transition-colors hover:scale-110 transform" aria-label="View Code">
                                             <Github className="w-5 h-5" />
                                         </a>
                                     )}
                                 </div>
                             </div>
-                            <div className="p-6">
-                                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{project.title}</h3>
-                                <p className="text-slate-600 dark:text-slate-400 mb-4 line-clamp-2 text-sm">{project.description}</p>
-                                <div className="flex flex-wrap gap-2">
-                                    {project.technologies.map((tech, idx) => (
-                                        <span key={idx} className="px-3 py-1 bg-teal-50 dark:bg-teal-400/10 text-teal-600 dark:text-teal-400 rounded-full text-xs font-medium border border-teal-500/20">
-                                            {tech}
-                                        </span>
-                                    ))}
+
+                            <div className="p-6 flex flex-col flex-grow">
+                                <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#FFD166] transition-colors">{project.title}</h3>
+                                <p className="text-slate-400 mb-6 line-clamp-2 text-sm flex-grow">{project.description}</p>
+
+                                <div className="mt-auto">
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        {project.technologies.slice(0, 3).map((tech, idx) => (
+                                            <span key={idx} className="px-2.5 py-1 bg-white/5 text-slate-300 rounded text-[10px] font-bold uppercase tracking-wider">
+                                                {tech}
+                                            </span>
+                                        ))}
+                                    </div>
+
+                                    {/* Action Button styled like the reference */}
+                                    {project.projectUrl && project.projectUrl !== '#' && (
+                                        <div className="inline-flex items-center space-x-2 text-xs font-bold text-white uppercase tracking-wider group-hover:text-[#FFD166] transition-colors">
+                                            <span>View Live</span>
+                                            <div className="w-6 h-6 rounded-full bg-[#EF476F] flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                                                <span className="text-white text-[10px] leading-none">→</span>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </motion.div>
                     ))}
                 </motion.div>
+
+                {/* CTA Button matching reference */}
+                <div className="mt-16 text-center">
+                    <motion.a
+                        href="#contact"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        className="inline-block bg-[#EF476F] hover:bg-[#D9385E] text-white px-8 py-3 rounded-md font-bold tracking-wider text-sm shadow-xl shadow-[#EF476F]/20 transition-all hover:-translate-y-1"
+                    >
+                        ALL PROJECTS
+                    </motion.a>
+                </div>
             </div>
         </section>
     );

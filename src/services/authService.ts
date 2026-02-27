@@ -59,7 +59,7 @@ export class AuthService {
             };
             localStorage.setItem(AUTH_TOKEN_KEY, JSON.stringify(session));
             return true;
-        } catch (error) {
+        } catch {
             return false;
         }
     }
